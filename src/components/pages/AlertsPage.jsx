@@ -1,22 +1,28 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 import { Badge } from "../ui/badge";
 import { Switch } from "../ui/switch";
-import { 
-  AlertTriangle, 
-  Plus, 
-  Send, 
-  Clock, 
-  CheckCircle, 
+import {
+  AlertTriangle,
+  Plus,
+  Send,
+  Clock,
+  CheckCircle,
   Bell,
   Users,
   MessageSquare,
   Settings,
-  X
+  X,
 } from "lucide-react";
 
 const activeAlerts = [
@@ -29,18 +35,19 @@ const activeAlerts = [
     issued: "2024-12-25 14:30",
     recipients: 1247,
     channels: ["SMS", "Email", "Push"],
-    description: "Tsunami warning issued for coastal areas. Immediate evacuation recommended."
+    description:
+      "Tsunami warning issued for coastal areas. Immediate evacuation recommended.",
   },
   {
     id: "ALT-002",
     type: "Coastal Flood Advisory",
-    region: "Miami Beach, FL", 
+    region: "Miami Beach, FL",
     severity: "High",
     status: "Active",
     issued: "2024-12-25 12:15",
     recipients: 856,
     channels: ["Email", "Push"],
-    description: "Minor coastal flooding expected during high tide periods."
+    description: "Minor coastal flooding expected during high tide periods.",
   },
   {
     id: "ALT-003",
@@ -51,8 +58,8 @@ const activeAlerts = [
     issued: "2024-12-24 18:20",
     recipients: 623,
     channels: ["SMS", "Email"],
-    description: "Storm surge watch canceled. Conditions have improved."
-  }
+    description: "Storm surge watch canceled. Conditions have improved.",
+  },
 ];
 
 const notificationHistory = [
@@ -61,29 +68,29 @@ const notificationHistory = [
     type: "Alert Sent",
     message: "Tsunami Warning alert sent to 1,247 recipients",
     time: "2h ago",
-    status: "success"
+    status: "success",
   },
   {
     id: 2,
     type: "System Update",
     message: "Emergency contact database updated",
-    time: "4h ago", 
-    status: "info"
+    time: "4h ago",
+    status: "info",
   },
   {
     id: 3,
     type: "Alert Delivered",
     message: "Coastal Flood Advisory delivered successfully",
     time: "6h ago",
-    status: "success"
+    status: "success",
   },
   {
     id: 4,
     type: "Failed Delivery",
     message: "12 SMS messages failed to deliver",
     time: "8h ago",
-    status: "error"
-  }
+    status: "error",
+  },
 ];
 
 export function AlertsPage() {
@@ -96,8 +103,8 @@ export function AlertsPage() {
     channels: {
       sms: true,
       email: true,
-      push: true
-    }
+      push: true,
+    },
   });
 
   const getSeverityColor = (severity) => {
@@ -152,7 +159,7 @@ export function AlertsPage() {
       region: "",
       severity: "Medium",
       message: "",
-      channels: { sms: true, email: true, push: true }
+      channels: { sms: true, email: true, push: true },
     });
   };
 
@@ -164,10 +171,14 @@ export function AlertsPage() {
     <div className="p-6 space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[#103173]">Alerts & Notifications</h1>
-          <p className="text-gray-600">Manage emergency alerts and communication</p>
+          <h1 className="text-2xl font-semibold text-[#103173]">
+            Alerts & Notifications
+          </h1>
+          <p className="text-gray-600">
+            Manage emergency alerts and communication
+          </p>
         </div>
-        <Button 
+        <Button
           onClick={() => setShowCreateAlert(true)}
           className="bg-[#1D7BC1] hover:bg-[#103173]"
         >
@@ -184,7 +195,7 @@ export function AlertsPage() {
               <div>
                 <p className="text-sm text-gray-600">Active Alerts</p>
                 <p className="text-2xl font-semibold text-[#103173]">
-                  {activeAlerts.filter(a => a.status === 'Active').length}
+                  {activeAlerts.filter((a) => a.status === "Active").length}
                 </p>
               </div>
               <AlertTriangle className="h-8 w-8 text-red-500" />
@@ -234,8 +245,8 @@ export function AlertsPage() {
         <Card className="border-[#1D7BC1]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle>Create Manual Alert</CardTitle>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               size="sm"
               onClick={() => setShowCreateAlert(false)}
             >
@@ -246,15 +257,19 @@ export function AlertsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="alert-type">Alert Type</Label>
-                <select 
+                <select
                   id="alert-type"
                   className="w-full px-3 py-2 border rounded-md"
                   value={newAlert.type}
-                  onChange={(e) => setNewAlert(prev => ({ ...prev, type: e.target.value }))}
+                  onChange={(e) =>
+                    setNewAlert((prev) => ({ ...prev, type: e.target.value }))
+                  }
                 >
                   <option value="">Select alert type</option>
                   <option value="Tsunami Warning">Tsunami Warning</option>
-                  <option value="Coastal Flood Advisory">Coastal Flood Advisory</option>
+                  <option value="Coastal Flood Advisory">
+                    Coastal Flood Advisory
+                  </option>
                   <option value="Storm Surge Watch">Storm Surge Watch</option>
                   <option value="High Wind Warning">High Wind Warning</option>
                 </select>
@@ -266,17 +281,24 @@ export function AlertsPage() {
                   id="region"
                   placeholder="e.g., Santa Monica Bay, CA"
                   value={newAlert.region}
-                  onChange={(e) => setNewAlert(prev => ({ ...prev, region: e.target.value }))}
+                  onChange={(e) =>
+                    setNewAlert((prev) => ({ ...prev, region: e.target.value }))
+                  }
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="severity">Severity Level</Label>
-                <select 
+                <select
                   id="severity"
                   className="w-full px-3 py-2 border rounded-md"
                   value={newAlert.severity}
-                  onChange={(e) => setNewAlert(prev => ({ ...prev, severity: e.target.value }))}
+                  onChange={(e) =>
+                    setNewAlert((prev) => ({
+                      ...prev,
+                      severity: e.target.value,
+                    }))
+                  }
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -289,43 +311,49 @@ export function AlertsPage() {
                 <Label>Delivery Channels</Label>
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <Switch 
+                    <Switch
                       id="sms"
                       checked={newAlert.channels.sms}
-                      onCheckedChange={(checked) => 
-                        setNewAlert(prev => ({ 
-                          ...prev, 
-                          channels: { ...prev.channels, sms: checked }
+                      onCheckedChange={(checked) =>
+                        setNewAlert((prev) => ({
+                          ...prev,
+                          channels: { ...prev.channels, sms: checked },
                         }))
                       }
                     />
-                    <Label htmlFor="sms" className="text-sm">SMS</Label>
+                    <Label htmlFor="sms" className="text-sm">
+                      SMS
+                    </Label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Switch 
+                    <Switch
                       id="email"
                       checked={newAlert.channels.email}
-                      onCheckedChange={(checked) => 
-                        setNewAlert(prev => ({ 
-                          ...prev, 
-                          channels: { ...prev.channels, email: checked }
+                      onCheckedChange={(checked) =>
+                        setNewAlert((prev) => ({
+                          ...prev,
+                          channels: { ...prev.channels, email: checked },
                         }))
                       }
                     />
-                    <Label htmlFor="email" className="text-sm">Email</Label>
+                    <Label htmlFor="email" className="text-sm">
+                      Email
+                    </Label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Switch 
+                    <Switch
                       id="push"
                       checked={newAlert.channels.push}
-                      onCheckedChange={(checked) => 
-                        setNewAlert(prev => ({ 
-                          ...prev, 
-                          channels: { ...prev.channels, push: checked }
+                      onCheckedChange={(checked) =>
+                        setNewAlert((prev) => ({
+                          ...prev,
+                          channels: { ...prev.channels, push: checked },
                         }))
                       }
                     />
-                    <Label htmlFor="push" className="text-sm">Push Notification</Label>
+                    <Label htmlFor="push" className="text-sm">
+                      Push Notification
+                    </Label>
                   </div>
                 </div>
               </div>
@@ -338,18 +366,23 @@ export function AlertsPage() {
                 placeholder="Enter alert message for field teams and emergency responders..."
                 rows={3}
                 value={newAlert.message}
-                onChange={(e) => setNewAlert(prev => ({ ...prev, message: e.target.value }))}
+                onChange={(e) =>
+                  setNewAlert((prev) => ({ ...prev, message: e.target.value }))
+                }
               />
             </div>
 
             <div className="flex items-center justify-between pt-4 border-t">
               <div className="text-sm text-gray-600">
-                Estimated recipients: ~1,200 • Channels: {selectedChannels.join(", ") || "None"}
+                Estimated recipients: ~1,200 • Channels:{" "}
+                {selectedChannels.join(", ") || "None"}
               </div>
-              <Button 
+              <Button
                 onClick={handleCreateAlert}
                 className="bg-[#1D7BC1] hover:bg-[#103173]"
-                disabled={!newAlert.type || !newAlert.region || !newAlert.message}
+                disabled={
+                  !newAlert.type || !newAlert.region || !newAlert.message
+                }
               >
                 <Send className="h-4 w-4 mr-2" />
                 Send Alert
@@ -372,9 +405,7 @@ export function AlertsPage() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-3">
                     <h4 className="font-medium text-[#103173]">{alert.type}</h4>
-                    <Badge 
-                      className={getSeverityColor(alert.severity)}
-                    >
+                    <Badge className={getSeverityColor(alert.severity)}>
                       {alert.severity}
                     </Badge>
                     <Badge variant={getStatusColor(alert.status)}>
@@ -417,21 +448,31 @@ export function AlertsPage() {
       <Card>
         <CardHeader>
           <CardTitle>Notification History</CardTitle>
-          <CardDescription>Recent alert delivery status and system events</CardDescription>
+          <CardDescription>
+            Recent alert delivery status and system events
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {notificationHistory.map((notification) => (
-              <div key={notification.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50">
+              <div
+                key={notification.id}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50"
+              >
                 {getNotificationIcon(notification.type)}
                 <div className="flex-1">
                   <p className="text-sm font-medium">{notification.message}</p>
                   <p className="text-xs text-gray-500">{notification.time}</p>
                 </div>
-                <Badge variant={
-                  notification.status === 'success' ? 'default' :
-                  notification.status === 'error' ? 'destructive' : 'secondary'
-                }>
+                <Badge
+                  variant={
+                    notification.status === "success"
+                      ? "default"
+                      : notification.status === "error"
+                      ? "destructive"
+                      : "secondary"
+                  }
+                >
                   {notification.status}
                 </Badge>
               </div>
