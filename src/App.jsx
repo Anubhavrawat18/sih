@@ -1,4 +1,11 @@
 import { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
 import { Navbar } from "./components/layout/Navbar";
 import { Sidebar } from "./components/layout/Sidebar";
 import { LoginPage } from "./components/pages/LoginPage";
@@ -11,72 +18,67 @@ import { ProfilePage } from "./components/pages/ProfilePage";
 import { HelpPage } from "./components/pages/HelpPage";
 import { ReportsProvider } from "./components/shared/ReportsContext";
 
+// 🔒 PrivateRoute wrapper
+function PrivateRoute({ isLoggedIn, children }) {
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+}
+
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activeView, setActiveView] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
+  const handleLogin = () => setIsLoggedIn(true);
 
-  const handleViewChange = (view) => {
-    setActiveView(view);
-  };
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const closeSidebar = () => {
-    setSidebarOpen(false);
-  };
-
-  const renderActiveView = () => {
-    switch (activeView) {
-      case "dashboard":
-        return <Dashboard />;
-      case "reports":
-        return <ReportsPage />;
-      case "hotspots":
-        return <HotspotAnalysisPage />;
-      case "alerts":
-        return <AlertsPage />;
-      case "analytics":
-        return <AnalyticsPage />;
-      case "profile":
-        return <ProfilePage />;
-      case "help":
-        return <HelpPage />;
-      default:
-        return <Dashboard />;
-    }
-  };
-
-  if (!isLoggedIn) {
-    return <LoginPage onLogin={handleLogin} />;
-  }
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
 
   return (
     <ReportsProvider>
-      <div className="min-h-screen bg-gray-50">
-        <Navbar onToggleSidebar={toggleSidebar} />
-        
-        <div className="flex">
-          <Sidebar 
-            activeView={activeView}
-            onViewChange={handleViewChange}
-            isOpen={sidebarOpen}
-            onClose={closeSidebar}
+      <Router>
+        <Routes>
+          {/* Public Login Route */}
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+
+          {/* Protected App Layout */}
+          <Route
+            path="/*"
+            element={
+              <PrivateRoute isLoggedIn={isLoggedIn}>
+                <div className="min-h-screen bg-gray-50">
+                  {/* ✅ Static Navbar + Sidebar stay always */}
+                  <Navbar onToggleSidebar={toggleSidebar} />
+                  <div className="flex">
+                    <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+                    <main className="flex-1 lg:ml-64 transition-all duration-300">
+                      <div className="min-h-[calc(100vh-4rem)]">
+                        <Routes>
+                          <Route path="/" element={<Dashboard />} />
+                          <Route path="/reports" element={<ReportsPage />} />
+                          <Route
+                            path="/hotspots"
+                            element={<HotspotAnalysisPage />}
+                          />
+                          <Route path="/alerts" element={<AlertsPage />} />
+                          <Route
+                            path="/analytics"
+                            element={<AnalyticsPage />}
+                          />
+                          <Route path="/profile" element={<ProfilePage />} />
+                          <Route path="/help" element={<HelpPage />} />
+                          <Route
+                            path="*"
+                            element={<Navigate to="/" replace />}
+                          />
+                        </Routes>
+                      </div>
+                    </main>
+                  </div>
+                </div>
+              </PrivateRoute>
+            }
           />
-          
-          <main className="flex-1 lg:ml-64 transition-all duration-300">
-            <div className="min-h-[calc(100vh-4rem)]">
-              {renderActiveView()}
-            </div>
-          </main>
-        </div>
-      </div>
+        </Routes>
+      </Router>
     </ReportsProvider>
   );
 }
