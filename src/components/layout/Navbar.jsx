@@ -19,12 +19,16 @@ export function Navbar({ onToggleSidebar }) {
             <span className="text-white font-bold text-sm">OG</span>
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-[#103173]">Ocean Guard</h1>
-            <p className="text-xs text-gray-600">Real-Time Coastal Hazard Intelligence</p>
+            <h1 className="text-xl font-semibold text-[#103173]">
+              Ocean Guard
+            </h1>
+            <p className="text-xs text-gray-600">
+              Real-Time Coastal Hazard Intelligence
+            </p>
           </div>
         </div>
       </div>
-      
+
       <div className="flex items-center gap-4">
         <Avatar className="h-8 w-8">
           <AvatarFallback className="bg-[#B9D4E9] text-[#103173]">

@@ -1,5 +1,4 @@
-// src/App.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,58 +8,76 @@ import {
 import { Navbar } from "./components/layout/Navbar";
 import { Sidebar } from "./components/layout/Sidebar";
 
+import { Dashboard } from "./components/pages/Dashboard";
 import { ReportsPage } from "./components/pages/ReportsPage";
 import { AnalyticsPage } from "./components/pages/AnalyticsPage";
 import { AlertsPage } from "./components/pages/AlertsPage";
-// import CommunityPage from "./components/pages/CommunityPage";
-// import SettingsPage from "./components/pages/SettingsPage";
 import { LoginPage } from "./components/pages/LoginPage";
+import { HotspotAnalysisPage } from "./components/pages/HotspotAnalysisPage";
+import { ProfilePage } from "./components/pages/ProfilePage";
+import { HelpPage } from "./components/pages/HelpPage";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBfAYhDoYLgQeiujQsp6zQTrdAOkmZ1bIY",
-  authDomain: "sih25-472317-7ad51.firebaseapp.com",
-  projectId: "sih25-472317-7ad51",
-  storageBucket: "sih25-472317-7ad51.firebasestorage.app",
-  messagingSenderId: "777523139075",
-  appId: "1:777523139075:web:57432c5c27edc6a735b436",
-  measurementId: "G-4FQXV9YF4L",
-};
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  setPersistence,
+  browserSessionPersistence,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { ReportsProvider } from "./components/shared/ReportsContext";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+// ✅ Firebase config (later move this into src/firebase/firebaseConfig.js)
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBfAYhDoYLgQeiujQsp6zQTrdAOkmZ1bIY",
+//   authDomain: "sih25-472317-7ad51.firebaseapp.com",
+//   projectId: "sih25-472317-7ad51",
+//   storageBucket: "sih25-472317-7ad51.firebasestorage.app",
+//   messagingSenderId: "777523139075",
+//   appId: "1:777523139075:web:57432c5c27edc6a735b436",
+//   measurementId: "G-4FQXV9YF4L",
+// };
+
+import { app, auth } from "./services/firebase";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleToggleSidebar = () => setIsSidebarOpen((open) => !open);
+  const handleCloseSidebar = () => setIsSidebarOpen(false);
 
   return (
     <Router>
       {!isAuthenticated ? (
-        // Show login page until authenticated
         <LoginPage onLogin={() => setIsAuthenticated(true)} />
       ) : (
-        // App layout after login
-        <div className="flex h-screen">
-          {/* Sidebar */}
-          <Sidebar />
-
-          <div className="flex flex-col flex-1">
-            {/* Navbar */}
-            <Navbar />
-
-            {/* Page content */}
-            <main className="flex-1 p-4 md:p-6 overflow-y-auto">
-              <Routes>
-                <Route path="/" element={<Navigate to="/reports" replace />} />
-                <Route path="/reports" element={<ReportsPage />} />
-                <Route path="/analytics" element={<AnalyticsPage />} />
-                <Route path="/alerts" element={<AlertsPage />} />
-                {/* <Route path="/community" element={<CommunityPage />} /> */}
-                {/* <Route path="/settings" element={<SettingsPage />} /> */}
-              </Routes>
-            </main>
+        <ReportsProvider>
+          <div className="min-h-screen bg-gray-50">
+            <Navbar onToggleSidebar={handleToggleSidebar} />
+            <div className="flex">
+              <Sidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} />
+              <main className="flex-1 lg:ml-64 transition-all duration-300">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/reports" element={<ReportsPage />} />
+                  <Route path="/analytics" element={<AnalyticsPage />} />
+                  <Route path="/alerts" element={<AlertsPage />} />
+                  <Route path="/hotspots" element={<HotspotAnalysisPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/help" element={<HelpPage />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </main>
+            </div>
           </div>
-        </div>
+        </ReportsProvider>
       )}
     </Router>
   );
