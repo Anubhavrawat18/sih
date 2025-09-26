@@ -26,17 +26,6 @@ import {
 } from "firebase/auth";
 import { ReportsProvider } from "./components/shared/ReportsContext";
 
-// ✅ Firebase config (later move this into src/firebase/firebaseConfig.js)
-// const firebaseConfig = {
-//   apiKey: "AIzaSyBfAYhDoYLgQeiujQsp6zQTrdAOkmZ1bIY",
-//   authDomain: "sih25-472317-7ad51.firebaseapp.com",
-//   projectId: "sih25-472317-7ad51",
-//   storageBucket: "sih25-472317-7ad51.firebasestorage.app",
-//   messagingSenderId: "777523139075",
-//   appId: "1:777523139075:web:57432c5c27edc6a735b436",
-//   measurementId: "G-4FQXV9YF4L",
-// };
-
 import { app, auth } from "./services/firebase";
 
 function App() {
